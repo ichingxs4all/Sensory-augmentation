@@ -1,7 +1,16 @@
 #include <BLEDevice.h>
 
-String targetMAC = "68:39:1a:62:54:84";   // ← change to your BLE device MAC
-int pwmPin = 5;                           // PWM output pin
+
+#define LED_BUILTIN 2
+
+String targetMAC = "94:B9:7E:E3:8F:5A";   // ← change to your BLE device MAC
+int pwmPin = 23;                           // PWM output pin
+
+int E1 = 16; //gpio16
+int M1 = 17; //gpio17
+int E2 = 27; //gpio27
+int M2 = 14; //gpio14
+
 int pwmChannel = 0;
 int pwmFreq = 5000;
 int pwmRes = 8;                           // 8-bit (0–255)
@@ -10,6 +19,7 @@ int lastRSSI = -100;
 
 class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
   void onResult(BLEAdvertisedDevice advertisedDevice) {
+    digitalWrite(LED_BUILTIN,LOW);
     if (advertisedDevice.getAddress().toString() == targetMAC) {
 
       int rssi = advertisedDevice.getRSSI();
@@ -22,6 +32,12 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
       // Convert RSSI (-100 to -30 dBm) → PWM (0 to 255)
       int pwmValue = map(rssi, -100, -30, 0, 255);
       pwmValue = constrain(pwmValue, 0, 255);
+      
+      digitalWrite(M1,HIGH);
+      digitalWrite(M2, HIGH);
+
+      analogWrite(E1, pwmValue);   //PWM Speed Control
+      analogWrite(E2, pwmValue);   //PWM Speed Control
 
       ledcWrite(pwmChannel, pwmValue);
 
@@ -33,6 +49,10 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 
 void setup() {
   Serial.begin(115200);
+  pinMode(M1, OUTPUT);
+  pinMode(M2, OUTPUT);
+  pinMode(LED_BUILTIN,OUTPUT);
+  
 
   // Setup PWM
   //ledcSetup(pwmChannel, pwmFreq, pwmRes);
@@ -44,8 +64,8 @@ void setup() {
   BLEScan* scan = BLEDevice::getScan();
   scan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
   scan->setActiveScan(true);
-  scan->setInterval(50);
-  scan->setWindow(40);
+  scan->setInterval(100);
+  scan->setWindow(80);
 }
 
 void loop() {
@@ -60,5 +80,6 @@ void loop() {
   if (millis() - lastSeen > 3000) {
     //ledcWrite(pwmChannel, 0);
     Serial.println("Device lost → PWM = 0");
+    digitalWrite(LED_BUILTIN,HIGH);
   }
 }
