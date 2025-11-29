@@ -19,8 +19,9 @@
 
 #define E1 16 //gpio16
 #define M1 17 //gpio17
-#define E2 27 //gpio27
 #define M2 14 //gpio14
+#define E2 27 //gpio27
+
 
 const int scanTime = 1;  //Scan interval in seconds
 
@@ -32,7 +33,7 @@ const int thresholdRSSI = -80;
 
 const int timeOut = 1000; //Timeout in mSecs;
 
-const int maxPWM = 50; // maximum PWM value
+const int maxPWM = 255; // maximum PWM value
 const int minPWM = 0; // minimum PWM value
 
 String targetMAC = "94:b9:7e:e3:8f:5a";   // ← change to your iBeacon device MAC
@@ -124,8 +125,10 @@ void loop() {
     if(debug) Serial.println("Device lost → PWM = 0");
     
     digitalWrite(LED_BUILTIN,LOW);
+    
     digitalWrite(M1, LOW);
-    digitalWrite(M2,LOW);
+    digitalWrite(M2, LOW);
+
     analogWrite(E1, minPWM);   //PWM Speed Control to 
     analogWrite(E2, minPWM);   //PWM Speed Control
   }
