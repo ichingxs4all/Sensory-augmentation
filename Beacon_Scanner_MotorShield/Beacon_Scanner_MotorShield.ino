@@ -15,16 +15,16 @@
 #include <BLEEddystoneTLM.h>  ///////
 #include <BLEBeacon.h>
 
-#define LED_BUILTIN 23
+#define LED_BUILTIN 2 //Led on Wemos R32
 
 #define E1 16  //gpio16
-#define M1 27  //gpio17
-#define E2 17  //gpio27
+#define M1 17  //gpio17
+#define E2 27  //gpio27
 #define M2 14  //gpio14
 
 const int scanTime = 1;  //Scan interval in seconds
 
-const bool debug = true;  //Set this to true to enable debug info on serial port
+const bool debug = false;  //Set this to true to enable debug info on serial port
 
 const int minRSSI = -100;  //Minimum rssi value
 const int maxRSSI = -30;   //Maximum rssi value
@@ -81,11 +81,12 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 };
 
 void setup() {
-  Serial.begin(115200);
+  if(debug) Serial.begin(115200);
 
   pinMode(M1, OUTPUT);
   pinMode(M2, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);
+
   digitalWrite(LED_BUILTIN, LOW);
 
   BLEDevice::init("");
@@ -99,9 +100,11 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   BLEScanResults *foundDevices = pBLEScan->start(scanTime, false);
+
   //Serial.print("Devices found: ");
   //Serial.println(foundDevices->getCount());
   //Serial.println("Scan done!");
+  
   pBLEScan->clearResults();  // delete results fromBLEScan buffer to release memory
 
   int pwmValue = map(lastRSSI, minRSSI, maxRSSI, minPWM, maxPWM);
@@ -124,6 +127,7 @@ void loop() {
     if (debug) Serial.println("Device lost → PWM = 0");
 
     digitalWrite(LED_BUILTIN, LOW);
+    
     digitalWrite(M1, LOW);
     digitalWrite(M2, LOW);
     analogWrite(E1, minPWM);  //PWM Speed Control to
