@@ -18,11 +18,15 @@
 #include <BLE2902.h>
 #include <BLEBeacon.h>
 
-#define DEVICE_NAME         "ESP32"
+#define DEVICE_NAME         "SENS_AUG"
 #define SERVICE_UUID        "7A0247E7-8E88-409B-A959-AB5092DDB03E"
 #define BEACON_UUID         "2D7A9F0C-E0E8-4CC9-A71B-A21DB2D034A1"
 #define BEACON_UUID_REV     "A134D0B2-1DA2-1BA7-C94C-E8E00C9F7A2D"
 #define CHARACTERISTIC_UUID "82258BAA-DF72-47E8-99BC-B73D7ECD08A5"
+
+#define LED_BUILTIN 22 //Led on Lolin D1 32
+
+const bool debug = false;
 
 BLEServer *pServer;
 BLECharacteristic *pCharacteristic;
@@ -32,18 +36,18 @@ uint8_t value = 0;
 class MyServerCallbacks : public BLEServerCallbacks {
   void onConnect(BLEServer *pServer) {
     deviceConnected = true;
-    //Serial.println("deviceConnected = true");
+    if(debug) Serial.println("deviceConnected = true");
   };
 
   void onDisconnect(BLEServer *pServer) {
     deviceConnected = false;
-    //Serial.println("deviceConnected = false");
+    if(debug) Serial.println("deviceConnected = false");
 
     // Restart advertising to be visible and connectable again
     BLEAdvertising *pAdvertising;
     pAdvertising = pServer->getAdvertising();
     pAdvertising->start();
-    //Serial.println("iBeacon advertising restarted");
+    if(debug) Serial.println("iBeacon advertising restarted");
   }
 };
 
@@ -52,14 +56,16 @@ class MyCallbacks : public BLECharacteristicCallbacks {
     String rxValue = pCharacteristic->getValue();
 
     if (rxValue.length() > 0) {
-      //Serial.println("*********");
-      //Serial.print("Received Value: ");
+      if(debug){
+      Serial.println("*********");
+      Serial.print("Received Value: ");
       for (int i = 0; i < rxValue.length(); i++) {
         //Serial.print(rxValue[i]);
       }
-      //Serial.println();
-      //Serial.println("*********");
+      Serial.println();
+      Serial.println("*********");
     }
+  }
   }
 };
 
@@ -107,10 +113,15 @@ void init_beacon() {
 }
 
 void setup() {
-  //Serial.begin(115200);
-  //Serial.println();
-  //Serial.println("Initializing...");
-  //Serial.flush();
+  if(debug){
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println("Initializing...");
+  Serial.flush();
+  }
+
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN,LOW);
 
   BLEDevice::init(DEVICE_NAME);
   pServer = BLEDevice::createServer();
@@ -119,15 +130,20 @@ void setup() {
   init_service();
   init_beacon();
 
-  //Serial.println("iBeacon + service defined and advertising!");
+  if(debug) Serial.println("iBeacon + service defined and advertising!");
 }
 
 void loop() {
+
   if (deviceConnected) {
-    Serial.printf("*** NOTIFY: %d ***\n", value);
+    if(debug) Serial.printf("*** NOTIFY: %d ***\n", value);
+    
     pCharacteristic->setValue(&value, 1);
     pCharacteristic->notify();
     value++;
   }
-  delay(200);
+  digitalWrite(LED_BUILTIN,HIGH);
+  delay(100);
+  digitalWrite(LED_BUILTIN,LOW);
+  delay(100);
 }
