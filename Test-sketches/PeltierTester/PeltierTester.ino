@@ -3,6 +3,9 @@
 #define PELTIERB 17
 #define POTPIN A0
 
+const in min = 0;
+const int max = 255;
+
 int value;
 
 void setup() {
@@ -14,7 +17,7 @@ void loop() {
   value = analogRead(POTPIN);
   Serial.println(value);
   // put your main code here, to run repeatedly:
-  value = map(analogRead(POTPIN), 0, 4095 , 0, 255 );
+  value = map(analogRead(POTPIN), 0, 4095 , min, max );
   analogWrite(LED_BUILTIN, value);
   analogWrite(PELTIERA, value);
   analogWrite(PELTIERB, value);
