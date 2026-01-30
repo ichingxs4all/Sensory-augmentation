@@ -1,19 +1,5 @@
-/*---------------------------------------------------------------------------------------------
-
-  Open Sound Control (OSC) library for the ESP8266/ESP32
-
-  Example for receiving open sound control (OSC) messages on the ESP8266/ESP32
-  Send integers '0' or '1' to the address "/led" to turn on/off the built-in LED of the esp8266.
-
-  This example code is in the public domain.
-
---------------------------------------------------------------------------------------------- */
-#ifdef ESP8266
-#include <ESP8266WiFi.h>
-#else
 #include <WiFi.h>
 #include <WiFiAP.h>
-#endif
 #include <WiFiUdp.h>
 #include <OSCMessage.h>
 #include <OSCBundle.h>
@@ -25,8 +11,8 @@ char pass[] = "m4k3s3ns!";    // your network password
 // A UDP instance to let us send and receive packets over UDP
 WiFiUDP Udp;
 
-const IPAddress outIp(192, 168, 4, 2);  // remote IP (not needed for receive)
-const unsigned int outPort = 9999;      // remote port (not needed for receive)
+const IPAddress outIp(192, 168, 4, 2);  // remote IP 
+const unsigned int outPort = 9999;      // remote port 
 const unsigned int localPort = 8888;    // local port to listen for UDP packets (here's where we send the packets)
 
 
@@ -36,16 +22,12 @@ unsigned int pwma, pwmb, pwmc, pwmd;
 
 
 #include <Adafruit_NeoPixel.h>
-// Which pin on the Arduino is connected to the NeoPixels?
-#define NEOPIXEL_LEDPIN 5  // On Trinket or Gemma, suggest changing this to 1
+// Which pin on the ESP32 is connected to the NeoPixels?
+#define NEOPIXEL_LEDPIN 5  
 
-// How many NeoPixels are attached to the Arduino?
+// How many NeoPixels are attached to the ESP32?
 #define NUMPIXELS 1  // Popular NeoPixel ring size
 
-// When setting up the NeoPixel library, we tell it how many pixels,
-// and which pin to use to send signals. Note that for older NeoPixel
-// strips you might need to change the third parameter -- see the
-// strandtest example for more information on possible values.
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_LEDPIN, NEO_GRB + NEO_KHZ800);
 
 int r, g, b;
@@ -64,6 +46,9 @@ int prev_mode, prev_level, prev_sensora, prev_sensorb;
 int minValue = 0;
 int maxValue = 4095;
 
+bool sensorA_enable = true;
+bool sensorB_enable = false;
+
 #define BUTTON_PIN 0
 #define POLARITY_PIN 4
 
@@ -80,7 +65,7 @@ int maxValue = 4095;
 #define PWMC 16
 #define PWMD 17
 
-bool debug = true;
+bool debug = false;
 
 #include "MegunoLink.h"
 #include "Filter.h"
@@ -100,30 +85,7 @@ void setup() {
 }
 
 void loop() {
-
   readButton();
   readSensors();
-
-  OSCMessage msg;
-  int size = Udp.parsePacket();
-
-  if (size > 0) {
-    while (size--) {
-      msg.fill(Udp.read());
-    }
-    if (!msg.hasError()) {
-      msg.dispatch("/led", led);
-      msg.dispatch("/polarity", polarity);
-      msg.dispatch("/pwm_a", pwm_a);
-      msg.dispatch("/pwm_b", pwm_b);
-      msg.dispatch("/pwm_c", pwm_c);
-      msg.dispatch("/pwm_d", pwm_d);
-      msg.dispatch("/rgb", rgb);
-      msg.dispatch("/mode", mode_set);
-    } else {
-      error = msg.getError();
-      Serial.print("error: ");
-      Serial.println(error);
-    }
-  }
+  readOSC();
 }

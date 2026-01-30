@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 754.0, 252.0, 1690.0, 780.0 ],
+        "rect": [ 410.0, 186.0, 1690.0, 780.0 ],
         "boxes": [
             {
                 "box": {
@@ -89,7 +89,7 @@
                     "outlettype": [ "float" ],
                     "parameter_enable": 0,
                     "patching_rect": [ 579.0, 737.0, 40.0, 40.0 ],
-                    "size": 8.0
+                    "size": 255.0
                 }
             },
             {
