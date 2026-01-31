@@ -23,12 +23,13 @@ void readSensors(){
     prev_level = level;
   }
 
-  if (sensora != prev_sensora){
+  if (sensora != prev_sensora && sensorA_enable == true)
+  {
     sendSensorA(sensora);
     prev_sensora=sensora;
   }
 
-  if (sensorb != prev_sensorb)
+  if (sensorb != prev_sensorb && sensorB_enable == true)
   {
     sendSensorB(sensorb);
     prev_sensorb=sensorb;

@@ -1,0 +1,10 @@
+{
+  "additionalFiles": "",
+  "builtInLibrariesFolders": "/Users/mragutli/Library/Arduino15/libraries",
+  "compiler.optimization_flags": "-Os",
+  "customBuildProperties": "",
+  "fqbn": "esp32:esp32:esp32:UploadSpeed=921600,CPUFreq=240,FlashFreq=80,FlashMode=qio,FlashSize=4M,PartitionScheme=default,DebugLevel=none,PSRAM=disabled,LoopCore=1,EventsCore=1,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default",
+  "hardwareFolders": "/Users/mragutli/Library/Arduino15/packages,/Users/mragutli/Documents/Arduino/hardware",
+  "otherLibrariesFolders": "/Users/mragutli/Documents/Arduino/libraries",
+  "sketchLocation": "/Users/mragutli/Documents/GitHub/Sensory-augmentation/SensorBox_OSC_OTA"
+}
