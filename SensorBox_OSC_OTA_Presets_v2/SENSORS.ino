@@ -10,13 +10,13 @@ void readSensors(){
 
   if(knob_enable) level = (KNOB_Filter.Current())/512;
  
-  int sensora = map(SENSORA_Filter.Current(),minValueSensorA,maxValueSensorA,0,4095);
-  int sensorb = map(SENSORB_Filter.Current(),minValueSensorB,maxValueSensorB,0,4095);
+  sensora = map(SENSORA_Filter.Current(),minValueSensorA,maxValueSensorA,0,4095);
+  sensorb = map(SENSORB_Filter.Current(),minValueSensorB,maxValueSensorB,0,4095);
 
-  if (mode != prev_mode){
-    sendMode(mode);
-    prev_mode=mode;
-  }
+  // if (mode != prev_mode){
+  //   sendMode(mode);
+  //   prev_mode=mode;
+  // }
 
   if (level != prev_level){
     sendLevel(level);

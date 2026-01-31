@@ -35,6 +35,8 @@ void readOSC(){
       msg.dispatch("/mode", mode_set);
       msg.dispatch("/preset",loadPreset);
       msg.dispatch("/store_preset",storePreset);
+      msg.dispatch("/stop", stop);
+
     } else {
       error = msg.getError();
       if(debug){
@@ -50,6 +52,22 @@ void led(OSCMessage &msg) {
   digitalWrite(LED_BUILTIN, ledState);
   if(debug){
   Serial.print("/led: ");
+  Serial.println(ledState);
+  }
+}
+
+void stop(OSCMessage &msg) {
+  ledState = msg.getInt(0);
+  analogWrite(PWMA, 0);
+  analogWrite(PWMB, 0);
+  analogWrite(PWMC, 0);
+  analogWrite(PWMD, 0);
+  sendPWMA(0);
+  sendPWMB(0);
+  sendPWMC(0);
+  sendPWMD(0);
+  if(debug){
+  Serial.print("/stop: ");
   Serial.println(ledState);
   }
 }
@@ -179,7 +197,8 @@ void mode_set(OSCMessage &msg) {
 }
 
 void pwm_a(OSCMessage &msg) {
-  pwma = msg.getInt(0);
+  pwma = constrain(msg.getInt(0), 0, maxPWMA);
+  analogWrite(PWMA, pwma);
   sendPWMA(pwma);
   if(debug){
   Serial.print("/pwm_a: ");
@@ -188,7 +207,8 @@ void pwm_a(OSCMessage &msg) {
 }
 
 void pwm_b(OSCMessage &msg) {
-  pwmb = msg.getInt(0); 
+  pwmb = constrain(msg.getInt(0), 0, maxPWMB); 
+  analogWrite(PWMB, pwmb);
   sendPWMB(pwmb);
   if(debug){
   Serial.print("/pwm_b: ");
@@ -197,7 +217,8 @@ void pwm_b(OSCMessage &msg) {
 }
 
 void pwm_c(OSCMessage &msg) {
-  pwmc = msg.getInt(0);
+  pwmc = constrain(msg.getInt(0), 0, maxPWMC);
+  analogWrite(PWMC, pwmc);
   sendPWMC(pwmc);
   if(debug){
   Serial.print("/pwm_c: ");
@@ -206,7 +227,8 @@ void pwm_c(OSCMessage &msg) {
 }
 
 void pwm_d(OSCMessage &msg) {
-  pwmd = msg.getInt(0);
+  pwmd = constrain(msg.getInt(0), 0, maxPWMD);
+  analogWrite(PWMD, pwmd);
   sendPWMD(pwmd);
   if(debug){
   Serial.print("/pwm_d: ");

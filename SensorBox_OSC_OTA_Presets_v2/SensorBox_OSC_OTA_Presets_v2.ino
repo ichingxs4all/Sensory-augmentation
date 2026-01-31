@@ -5,7 +5,6 @@
 #include <WiFiAP.h>
 #include <WiFiUdp.h>
 
-
 #include <OSCMessage.h>
 #include <OSCBundle.h>
 #include <OSCData.h>
@@ -29,7 +28,7 @@ const unsigned int localPort = 8888;    // local port to listen for UDP packets 
 
 OSCErrorCode error;
 
-unsigned int ledState = LOW;  // LOW means led is *on*
+unsigned int ledState = HIGH;  // LOW means led is *on*
 unsigned int pwma, pwmb, pwmc, pwmd;
 
 
@@ -88,7 +87,6 @@ int setfilter_b = 10;
 
 int spareA;
 int spareB;
-
 
 #define BUTTON_PIN 0
 #define POLARITY_PIN 4
