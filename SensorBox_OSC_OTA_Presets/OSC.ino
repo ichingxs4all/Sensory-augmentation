@@ -29,6 +29,8 @@ void readOSC(){
       msg.dispatch("/min_sensor_b", min_sensor_b);
       msg.dispatch("/setfilter_a", setFilterSensorA);
       msg.dispatch("/setfilter_b", setFilterSensorB);
+      msg.dispatch("/inva", invert_a);
+      msg.dispatch("/invb", invert_b);
       msg.dispatch("/rgb", rgb);
       msg.dispatch("/mode", mode_set);
       msg.dispatch("/preset",loadPreset);
@@ -51,6 +53,25 @@ void led(OSCMessage &msg) {
   Serial.println(ledState);
   }
 }
+
+void invert_a(OSCMessage &msg) {
+  invA = msg.getInt(0);
+  sendInvA(invA);
+  if(debug){
+  Serial.print("/inva: ");
+  Serial.println(invA);
+  }
+}
+
+void invert_b(OSCMessage &msg) {
+  invB = msg.getInt(0);
+  sendInvB(invB);
+  if(debug){
+  Serial.print("/invb: ");
+  Serial.println(invB);
+  }
+}
+
 
 void loadPreset(OSCMessage &msg) {
   preset = msg.getInt(0);
@@ -341,7 +362,31 @@ void sendSensorBFilter(){
 }
 
 
+void sendInvA(int invA){
+  OSCMessage msg("/inva");
+    msg.add((int32_t)invA);
+    Udp.beginPacket(outIp, outPort);
+    msg.send(Udp);
+    Udp.endPacket();
+    msg.empty();
+    if(debug){
+    Serial.print("/inva ");
+    Serial.println(invA);
+    }
+}
 
+void sendInvB(int invB){
+  OSCMessage msg("/invb");
+    msg.add((int32_t)invB);
+    Udp.beginPacket(outIp, outPort);
+    msg.send(Udp);
+    Udp.endPacket();
+    msg.empty();
+    if(debug){
+    Serial.print("/invb ");
+    Serial.println(invB);
+    }
+}
 
 void sendPWMA(int pwma){
     OSCMessage msg("/pwm_a");

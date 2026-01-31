@@ -1,3 +1,6 @@
+//Sensorbox V1.0
+//AP mode. connect to 'sensorbox_1'
+
 #include <WiFi.h>
 #include <WiFiAP.h>
 #include <WiFiUdp.h>
@@ -8,7 +11,7 @@
 #include <OSCData.h>
 
 #include <WebServer.h>
-#include <ElegantOTA.h>
+#include <ElegantOTA.h> // Install ElegantOTA library through Library Manager
 
 WebServer server(80);
 
@@ -24,8 +27,8 @@ const IPAddress outIp(192, 168, 4, 255);  // remote IP
 const unsigned int outPort = 9999;      // remote port 
 const unsigned int localPort = 8888;    // local port to listen for UDP packets (here's where we send the packets)
 
-
 OSCErrorCode error;
+
 unsigned int ledState = LOW;  // LOW means led is *on*
 unsigned int pwma, pwmb, pwmc, pwmd;
 
@@ -67,6 +70,9 @@ int minValueSensorA = 0;
 int maxValueSensorA = 4095;
 int minValueSensorB = 0;
 int maxValueSensorB = 4095;
+
+int invA = false;
+int invB = false;
 
 int maxPWMA = 255;
 int maxPWMB = 255;
