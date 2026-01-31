@@ -1,9 +1,7 @@
 void setupWiFi(){
   // Connect to WiFi network
-  if(debug){
   Serial.println();
   Serial.println("Configuring access point...");
-  }
 
   // You can remove the password parameter if you want the AP to be open.
   // a valid password must have more than 7 characters
@@ -13,16 +11,19 @@ void setupWiFi(){
       ;
   }
   IPAddress myIP = WiFi.softAPIP();
-  if(debug){
+
   Serial.print("AP IP address: ");
   Serial.println(myIP);
   Serial.println("Starting UDP");
-  }
   Udp.begin(localPort);
 
-  if(debug)Serial.print("Local port: ");
+  Serial.print("Local port: ");
 #ifdef ESP32
-  if(debug)Serial.println(localPort);
+  Serial.println(localPort);
+  Serial.print("Sending OSC messages to: ");
+  Serial.print(outIp);
+  Serial.print(" on port: ");
+  Serial.println(outPort);
 #else
   if(debug)Serial.println(Udp.localPort());
 #endif

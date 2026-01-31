@@ -20,7 +20,7 @@ char pass[] = "m4k3s3ns!";    // your network password
 // A UDP instance to let us send and receive packets over UDP
 WiFiUDP Udp;
 
-const IPAddress outIp(192, 168, 4, 2);  // remote IP 
+const IPAddress outIp(192, 168, 4, 255);  // remote IP 
 const unsigned int outPort = 9999;      // remote port 
 const unsigned int localPort = 8888;    // local port to listen for UDP packets (here's where we send the packets)
 
@@ -39,10 +39,20 @@ unsigned int pwma, pwmb, pwmc, pwmd;
 
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_LEDPIN, NEO_GRB + NEO_KHZ800);
 
+#include <Preferences.h>
+Preferences prefs;
+
+const uint8_t NUM_PRESETS = 8;
+const uint8_t VALUES_PER_PRESET = 16;
+
+// Buffer to hold one preset in RAM
+int32_t presetBuffer[VALUES_PER_PRESET];
+
 int r, g, b;
 int mode = 0;
 int polarity_state = 0;
 int level = 0;
+int pattern = 1;
 int sensora = 0;
 int sensorb = 0;
 int buttonState = 0;
@@ -62,8 +72,16 @@ int maxPWMB = 255;
 int maxPWMC = 255;
 int maxPWMD = 255;
 
-bool sensorA_enable = true;
+bool sensorA_enable = false;
 bool sensorB_enable = false;
+bool knob_enable = true;
+
+int setfilter_a = 10;
+int setfilter_b = 10;
+
+int spareA;
+int spareB;
+
 
 #define BUTTON_PIN 0
 #define POLARITY_PIN 4
@@ -81,7 +99,7 @@ bool sensorB_enable = false;
 #define PWMC 16
 #define PWMD 17
 
-bool debug = false;
+bool debug = true;
 
 float version = 1.0;
 String versionStr = "";
@@ -92,17 +110,20 @@ String versionStr = "";
 // Create a new exponential filter with a weight of 10 and initial value of 0. 
 ExponentialFilter<long> SENSORA_Filter(5, 0);
 ExponentialFilter<long> SENSORB_Filter(5, 0);
-ExponentialFilter<long> SENSORC_Filter(5, 0);
-ExponentialFilter<long> SENSORD_Filter(5, 0);
 ExponentialFilter<long> KNOB_Filter(5, 0);
 
 void setup() {
   Serial.begin(115200);
+  initPresets();
+  getAllPresets();
+
   versionConv();
   setupPins();
   setupRGB_Led();
   setupWiFi();
   startupOTA(); 
+
+  loadPresetIntoBuffer(0);
 }
 
 void loop() {

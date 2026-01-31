@@ -13,7 +13,7 @@ void startupOTA() {
   ElegantOTA.onEnd(onOTAEnd);
 
   server.begin();
-  Serial.println("HTTP server started");
+  Serial.println("HTTP server started on port 80");
 }
 
 void checkOTA() {
