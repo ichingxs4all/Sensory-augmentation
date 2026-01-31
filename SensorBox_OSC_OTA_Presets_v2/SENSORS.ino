@@ -9,9 +9,12 @@ void readSensors(){
   KNOB_Filter.Filter(Knob_RawValue);
 
   if(knob_enable) level = (KNOB_Filter.Current())/512;
- 
-  sensora = map(SENSORA_Filter.Current(),minValueSensorA,maxValueSensorA,0,4095);
-  sensorb = map(SENSORB_Filter.Current(),minValueSensorB,maxValueSensorB,0,4095);
+  
+  if(invA==0) sensora = map(SENSORA_Filter.Current(),minValueSensorA,maxValueSensorA,0,4095);
+  if(invB==0) sensorb = map(SENSORB_Filter.Current(),minValueSensorB,maxValueSensorB,0,4095);
+
+  if(invA==1) sensora = map(SENSORA_Filter.Current(),minValueSensorA,maxValueSensorA,4095,0);
+  if(invB==1) sensorb = map(SENSORB_Filter.Current(),minValueSensorB,maxValueSensorB,4095,0);
 
   // if (mode != prev_mode){
   //   sendMode(mode);

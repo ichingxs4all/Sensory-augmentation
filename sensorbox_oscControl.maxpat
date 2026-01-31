@@ -9,8 +9,62 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 482.0, 105.0, 1642.0, 973.0 ],
+        "rect": [ 34.0, 105.0, 1642.0, 973.0 ],
         "boxes": [
+            {
+                "box": {
+                    "id": "obj-37",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 416.0, 469.0, 103.0, 20.0 ],
+                    "text": "Invert Sensor B"
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-39",
+                    "maxclass": "toggle",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "int" ],
+                    "parameter_enable": 0,
+                    "patching_rect": [ 380.0, 467.0, 24.0, 24.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-40",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 380.0, 519.0, 81.0, 22.0 ],
+                    "text": "prepend /invb"
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-36",
+                    "maxclass": "button",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "bang" ],
+                    "parameter_enable": 0,
+                    "patching_rect": [ 680.0, 391.0, 24.0, 24.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-10",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 680.0, 425.0, 82.0, 22.0 ],
+                    "text": "prepend /stop"
+                }
+            },
             {
                 "box": {
                     "id": "obj-12",
@@ -39,8 +93,8 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 442.0, 437.0, 102.0, 22.0 ],
-                    "text": "prepend /invert_a"
+                    "patching_rect": [ 440.5, 430.0, 81.0, 22.0 ],
+                    "text": "prepend /inva"
                 }
             },
             {
@@ -1949,6 +2003,12 @@
         "lines": [
             {
                 "patchline": {
+                    "destination": [ "obj-1", 0 ],
+                    "source": [ "obj-10", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "obj-103", 0 ],
                     "source": [ "obj-101", 0 ]
                 }
@@ -2467,6 +2527,12 @@
             },
             {
                 "patchline": {
+                    "destination": [ "obj-10", 0 ],
+                    "source": [ "obj-36", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "obj-1", 0 ],
                     "midpoints": [ 584.5, 365.0, 760.5, 365.0 ],
                     "source": [ "obj-38", 0 ]
@@ -2474,8 +2540,20 @@
             },
             {
                 "patchline": {
+                    "destination": [ "obj-40", 0 ],
+                    "source": [ "obj-39", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "obj-2", 0 ],
                     "source": [ "obj-4", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-1", 0 ],
+                    "source": [ "obj-40", 0 ]
                 }
             },
             {
