@@ -93,7 +93,7 @@ void invert_b(OSCMessage &msg) {
 
 void loadPreset(OSCMessage &msg) {
   preset = msg.getInt(0);
-  loadPresetIntoBuffer(preset);
+  loadPreset(preset);
   sendPreset(preset);
   if(debug){
   Serial.print("/preset: ");
@@ -103,7 +103,7 @@ void loadPreset(OSCMessage &msg) {
 
 void storePreset(OSCMessage &msg) {
   preset = msg.getInt(0);
-  storeBufferIntoPreset(preset);
+  storePreset(preset);
   sendPreset(preset);
   if(debug){
   Serial.print("/preset: ");
@@ -169,7 +169,7 @@ void setFilterSensorA(OSCMessage &msg) {
   setfilter_a = msg.getInt(0);
 
   SENSORA_Filter.SetWeight(setfilter_a);
-  sendSensorAFilter();
+  sendSensorAFilter(setfilter_a);
   
   if(debug){
   Serial.print("/set_filter_a: ");
@@ -181,7 +181,7 @@ void setFilterSensorB(OSCMessage &msg) {
   setfilter_b = msg.getInt(0);
 
   SENSORB_Filter.SetWeight(setfilter_b);
-  sendSensorBFilter();
+  sendSensorBFilter(setfilter_b);
   if(debug){
   Serial.print("/set_filter_b: ");
   Serial.println(setfilter_b);
@@ -355,7 +355,7 @@ void sendSensorB(int sensor_b){
     }
 }
 
-void sendSensorAFilter(){
+void sendSensorAFilter(int filter_a){
     OSCMessage msg("/setfilter_a");
     int filterWeight = SENSORA_Filter.GetWeight();
     msg.add((int32_t)filterWeight);
@@ -369,7 +369,7 @@ void sendSensorAFilter(){
     }
 }
 
-void sendSensorBFilter(){
+void sendSensorBFilter(int filter_b){
     OSCMessage msg("/setfilter_b");
     int filterWeight = SENSORB_Filter.GetWeight();
     msg.add((int32_t)filterWeight);
@@ -597,6 +597,21 @@ void sendMode( int mode){
     if(debug){
     Serial.print("/mode ");
     Serial.println(mode);
+    //setRGB_Mode(mode);
+    }
+}
+
+
+void sendPolarity (int polarity){
+    OSCMessage msg("/polarity");
+    msg.add((int32_t)polarity);
+    Udp.beginPacket(outIp, outPort);
+    msg.send(Udp);
+    Udp.endPacket();
+    msg.empty();
+    if(debug){
+    Serial.print("/polarity ");
+    Serial.println(polarity);
     //setRGB_Mode(mode);
     }
 }

@@ -1,108 +1,59 @@
-void savePreset(uint8_t presetIndex, int32_t *data) {
-  if (presetIndex >= NUM_PRESETS) return;
 
-  prefs.begin("presets", false); // RW mode
+void loadPreset(int number){
 
-  char key[10];
-  snprintf(key, sizeof(key), "preset%d", presetIndex);
+ if (!LittleFS.begin(true)) Serial.println("LittleFS Mount Failed");
 
-  prefs.putBytes(key, data, sizeof(int32_t) * VALUES_PER_PRESET);
+  store.begin(PRESET_01);
 
-  prefs.end();
-}
+String MODE = store.get(KEY_1_MODE);
+mode = MODE.toInt();
 
-bool loadPreset(uint8_t presetIndex, int32_t *data) {
-  if (presetIndex >= NUM_PRESETS) return false;
+String LEVEL = store.get(KEY_2_LEVEL);
+level = LEVEL.toInt();
 
-  prefs.begin("presets", true); // Read-only
+String PATTERN = store.get(KEY_3_PATTERN);
+pattern = PATTERN.toInt();
 
-  char key[10];
-  snprintf(key, sizeof(key), "preset%d", presetIndex);
+String POLARITY =store.get(KEY_4_POLARITY);
+polarity_state = POLARITY.toInt();
 
-  size_t expectedSize = sizeof(int32_t) * VALUES_PER_PRESET;
-  size_t actualSize = prefs.getBytes(key, data, expectedSize);
+String MAXPWMA = store.get(KEY_5_MAXPWMA);
+maxPWMA = MAXPWMA.toInt();
 
-  prefs.end();
+String MAXPWMB = store.get(KEY_6_MAXPWMB);
+maxPWMB = MAXPWMB.toInt();
 
-  return (actualSize == expectedSize);
-}
+String MAXPWMC = store.get(KEY_7_MAXPWMC);
+maxPWMC = MAXPWMC.toInt();
 
+String MAXPWMD = store.get(KEY_8_MAXPWMD);
+maxPWMD = MAXPWMD.toInt();
 
-void initPresets(){
+String MAXSENA = store.get(KEY_10_MAXSENA);
+maxValueSensorA = MAXSENA.toInt();
 
-for (int i = 0; i < NUM_PRESETS; i++) {
-    
-presetBuffer[0] = 0; //mode
-presetBuffer[1] = 0; //level
-presetBuffer[2] = 1; //pattern
-presetBuffer[3] = 0; //polarity_state
-presetBuffer[4] = 255; //maxPWMA
-presetBuffer[5] = 255; //maxPWMB
-presetBuffer[6] = 255; //maxPWMC
-presetBuffer[7] = 255; //maxPWMD
-presetBuffer[8] = 0; // minValueSensorA
-presetBuffer[9] = 4095; //maxValueSensorA
-presetBuffer[10] = 0; // minValueSensorB
-presetBuffer[11] = 4095; //maxValueSensorB
-presetBuffer[12] = 10; //setfilter_a
-presetBuffer[13] = 10; // setfilter_b
-presetBuffer[14] = 0; // spare
-presetBuffer[15] = 0; // spare
+String MINSENA = store.get(KEY_9_MINSENA);
+minValueSensorA = MINSENA.toInt();
 
-savePreset(i, presetBuffer);
+String MAXSENB = store.get(KEY_12_MAXSENB);
+maxValueSensorB = MAXSENA.toInt();
 
-Serial.print("Preset ");
-Serial.print(i);
-Serial.println(" saved");
-}
+String MINSENB = store.get(KEY_11_MINSENB);
+minValueSensorB = MINSENB.toInt();
 
-}
+String FILTERA = store.get(KEY_13_FILTERA);
+setfilter_a = FILTERA.toInt();
 
-void getAllPresets(){
-  // Clear buffer
-  memset(presetBuffer, 0, sizeof(presetBuffer));
+String FILTERB = store.get(KEY_14_FILTERB);
+setfilter_b = FILTERB.toInt();
 
-for (int i = 0; i < NUM_PRESETS; i++) {
-  // Load preset 0
-  if (loadPreset(i, presetBuffer)) {
-    Serial.print("Preset"); 
-    Serial.print(i);
-    Serial.println("loaded:");
+LittleFS.end();
 
-    for (int j = 0; j < VALUES_PER_PRESET; j++) {
-      Serial.print(presetBuffer[j]);
-      Serial.print(" ");
-    }
-    Serial.println();
-  } else {
-    Serial.print("Failed to load preset ");
-    Serial.print(i);
-  }
-}
-}
-
-void loadPresetIntoBuffer(int number){
-
-loadPreset(number,presetBuffer);
-
-mode = presetBuffer[0] = 0; //mode
-level = presetBuffer[1] = 0; //level
-pattern = presetBuffer[2] = 1; //pattern
-polarity_state = presetBuffer[3] = 0; //polarity
-maxPWMA = presetBuffer[4] = 255; //maxPWMA
-maxPWMB = presetBuffer[5] = 255; //maxPWMB
-maxPWMC = presetBuffer[6] = 255; //maxPWMC
-maxPWMD = presetBuffer[7] = 255; //maxPWMD
-minValueSensorA = presetBuffer[8] = 0; // minValueSensorA
-maxValueSensorA = presetBuffer[9] = 4095; //maxValueSensorA
-minValueSensorB = presetBuffer[10] = 0; // minValueSensorB
-maxValueSensorB = presetBuffer[11] = 4095; //maxValueSensorB
-setfilter_a = presetBuffer[12] = 10; //setfilter_a
-setfilter_b = presetBuffer[13] = 10; // setfilter_b
-spareA = presetBuffer[14] = 0; // spare
-spareB = presetBuffer[15] = 0; // spare
-
-sendPreset(preset);
+sendPreset(number);
+sendMode(mode);
+sendLevel(level);
+sendPattern(pattern);
+sendPolarity(polarity_state);
 sendMaxPWMA(maxPWMA);
 sendMaxPWMB(maxPWMB);
 sendMaxPWMC(maxPWMC);
@@ -111,44 +62,64 @@ sendMaxSensorA(maxValueSensorA);
 sendMaxSensorB(maxValueSensorB);
 sendMinSensorA(minValueSensorA);
 sendMinSensorB(minValueSensorB);
-sendLevel(level);
-sendMode(mode);
-sendPattern(pattern);
-sendSensorAFilter();
-sendSensorBFilter();
+sendSensorAFilter(setfilter_a);
+sendSensorBFilter(setfilter_b);
 }
 
-void storeBufferIntoPreset(int number){
-clearPreset();
-presetBuffer[0] = mode;
-presetBuffer[1] = level;
-presetBuffer[2] = pattern;
-presetBuffer[3] = polarity_state;
-presetBuffer[4] = maxPWMA;
-presetBuffer[5] = maxPWMB;
-presetBuffer[6] = maxPWMC;
-presetBuffer[7] = maxPWMD;
-presetBuffer[8] = minValueSensorA;
-presetBuffer[9] = maxValueSensorA;
-presetBuffer[10] = minValueSensorB;
-presetBuffer[11] = maxValueSensorB;
-presetBuffer[12] = setfilter_a;
-presetBuffer[13] = setfilter_b;
-presetBuffer[14] = spareA;
-presetBuffer[15] = spareB;
+void storePreset(int number){
+
+ if (!LittleFS.begin(true)) Serial.println("LittleFS Mount Failed");
+
+  store.begin(PRESET_01);
+
+  store.set(KEY_1_MODE,String(mode));
+
+  store.set(KEY_2_LEVEL,String(level));
+
+  store.set(KEY_3_PATTERN,String(pattern));
+
+  store.set(KEY_4_POLARITY,String(polarity_state));
+
+  store.set(KEY_5_MAXPWMA , String(maxPWMA));
+
+  store.set( KEY_6_MAXPWMB , String(maxPWMB));
+
+  store.set(KEY_7_MAXPWMC , String(maxPWMC));
+
+  store.set( KEY_8_MAXPWMD , String(maxPWMD));
+
+  store.set( KEY_9_MINSENA , String(minValueSensorA));
+
+  store.set( KEY_10_MAXSENA , String(maxValueSensorA));
+
+  store.set(KEY_11_MINSENB , String(minValueSensorB));
+
+  store.set(KEY_12_MAXSENB , String(maxValueSensorB));
+
+  store.set(KEY_13_FILTERA , String(setfilter_a));
+
+  store.set(KEY_14_FILTERB , String(setfilter_b));
+
+  LittleFS.end();
 
 if(debug){
-Serial.print("Store buffer on preset: ");
+Serial.print("Preset stored: ");
 Serial.println( number);
+Serial.println();
+sendPreset(number);
+sendMode(mode);
+sendLevel(level);
+sendPattern(pattern);
+sendPolarity(polarity_state);
+sendMaxPWMA(maxPWMA);
+sendMaxPWMB(maxPWMB);
+sendMaxPWMC(maxPWMC);
+sendMaxPWMD(maxPWMD);
+sendMaxSensorA(maxValueSensorA);
+sendMaxSensorB(maxValueSensorB);
+sendMinSensorA(minValueSensorA);
+sendMinSensorB(minValueSensorB);
+sendSensorAFilter(setfilter_a);
+sendSensorBFilter(setfilter_b);
 }
-
-savePreset(number,presetBuffer);
-}
-
-
-
-void clearPreset(){
-
-    // Clear buffer
-  memset(presetBuffer, 0, sizeof(presetBuffer));
 }

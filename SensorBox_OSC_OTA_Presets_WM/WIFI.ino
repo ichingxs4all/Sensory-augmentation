@@ -29,7 +29,7 @@ void setupWiFi(){
   //}
   //IPAddress myIP = WiFi.softAPIP();
   IPAddress myIP = WiFi.localIP();
-  Serial.print("AP IP address: ");
+  Serial.print("IP address: ");
   Serial.println(myIP);
   Serial.println("Starting UDP");
   Udp.begin(localPort);

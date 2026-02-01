@@ -9,8 +9,19 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 34.0, 105.0, 1642.0, 973.0 ],
+        "rect": [ 229.0, 105.0, 1642.0, 973.0 ],
         "boxes": [
+            {
+                "box": {
+                    "id": "obj-16",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 2,
+                    "outlettype": [ "int", "" ],
+                    "patching_rect": [ 512.0000152587891, 1146.6667008399963, 37.0, 22.0 ],
+                    "text": "serial"
+                }
+            },
             {
                 "box": {
                     "id": "obj-37",
@@ -253,7 +264,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 1907.0, 357.0, 18.0, 130.0 ],
                     "size": 8,
-                    "value": 1
+                    "value": 0
                 }
             },
             {
@@ -369,7 +380,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 1907.0, 76.0, 18.0, 130.0 ],
                     "size": 8,
-                    "value": 1
+                    "value": 0
                 }
             },
             {
@@ -539,7 +550,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 912.0, 52.0, 18.0, 130.0 ],
                     "size": 8,
-                    "value": 0
+                    "value": 5
                 }
             },
             {
@@ -1659,7 +1670,7 @@
                     "parameter_enable": 0,
                     "patching_rect": [ 801.0, 52.0, 18.0, 82.0 ],
                     "size": 5,
-                    "value": 0
+                    "value": 1
                 }
             },
             {
@@ -1995,8 +2006,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 751.0, 380.0, 151.0, 22.0 ],
-                    "text": "udpsend 192.168.4.1 8888"
+                    "patching_rect": [ 751.0, 380.0, 178.0, 22.0 ],
+                    "text": "udpsend 192.168.188.128 8888"
                 }
             }
         ],
@@ -2004,6 +2015,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-1", 0 ],
+                    "midpoints": [ 689.5, 450.0, 666.0, 450.0, 666.0, 375.0, 760.5, 375.0 ],
                     "source": [ "obj-10", 0 ]
                 }
             },
@@ -2195,6 +2207,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-1", 0 ],
+                    "midpoints": [ 450.0, 453.0, 426.0, 453.0, 426.0, 372.0, 760.5, 372.0 ],
                     "source": [ "obj-15", 0 ]
                 }
             },
@@ -2553,6 +2566,7 @@
             {
                 "patchline": {
                     "destination": [ "obj-1", 0 ],
+                    "midpoints": [ 389.5, 552.0, 549.0, 552.0, 549.0, 417.0, 666.0, 417.0, 666.0, 375.0, 760.5, 375.0 ],
                     "source": [ "obj-40", 0 ]
                 }
             },

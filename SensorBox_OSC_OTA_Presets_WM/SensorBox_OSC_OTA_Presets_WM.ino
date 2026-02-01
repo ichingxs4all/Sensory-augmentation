@@ -26,7 +26,7 @@ char pass[] = "m4k3s3ns!";    // your network password
 // A UDP instance to let us send and receive packets over UDP
 WiFiUDP Udp;
 
-const IPAddress outIp(192, 168, 4, 255);  // remote IP 
+const IPAddress outIp(192, 168, 188, 255);  // remote IP 
 const unsigned int outPort = 9999;      // remote port 
 const unsigned int localPort = 8888;    // local port to listen for UDP packets (here's where we send the packets)
 
@@ -44,15 +44,6 @@ unsigned int pwma, pwmb, pwmc, pwmd;
 #define NUMPIXELS 1  // Popular NeoPixel ring size
 
 Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_LEDPIN, NEO_GRB + NEO_KHZ800);
-
-#include <Preferences.h>
-Preferences prefs;
-
-const uint8_t NUM_PRESETS = 8;
-const uint8_t VALUES_PER_PRESET = 16;
-
-// Buffer to hold one preset in RAM
-int32_t presetBuffer[VALUES_PER_PRESET];
 
 int r, g, b;
 int mode = 0;
@@ -121,18 +112,40 @@ ExponentialFilter<long> SENSORA_Filter(5, 0);
 ExponentialFilter<long> SENSORB_Filter(5, 0);
 ExponentialFilter<long> KNOB_Filter(5, 0);
 
+#include <LittleFS.h>
+/* TinyKey Library */
+#include <TinyKeyValueStore.h>
+
+#define PRESET_01   "/preset_02.txt" // filename must starts with "/"
+
+TinyKeyValueStore store = TinyKeyValueStore(LittleFS);
+
+int16_t presetBuffer[] = { 0,1,1,0,255,255,255,255,0,4095,0,4095,5,5};
+
+#define KEY_1_MODE    "0"
+#define KEY_2_LEVEL   "1"
+#define KEY_3_PATTERN  "1"
+#define KEY_4_POLARITY "0"
+#define KEY_5_MAXPWMA "255"
+#define KEY_6_MAXPWMB "255"
+#define KEY_7_MAXPWMC "255"
+#define KEY_8_MAXPWMD "255"
+#define KEY_9_MINSENA "0"
+#define KEY_10_MAXSENA "4095"
+#define KEY_11_MINSENB "0"
+#define KEY_12_MAXSENB "4095"
+#define KEY_13_FILTERA "5"
+#define KEY_14_FILTERB "5"
+
+
 void setup() {
   Serial.begin(115200);
-  //initPresets();
-  getAllPresets();
-
   versionConv();
   setupPins();
   setupRGB_Led();
   setupWiFi();
   startupOTA(); 
-
-  loadPresetIntoBuffer(0);
+  //loadPreset(0);
 }
 
 void loop() {
