@@ -16,10 +16,13 @@ void readSensors(){
   if(invA==1) sensora = map(SENSORA_Filter.Current(),minValueSensorA,maxValueSensorA,4095,0);
   if(invB==1) sensorb = map(SENSORB_Filter.Current(),minValueSensorB,maxValueSensorB,4095,0);
 
-  // if (mode != prev_mode){
-  //   sendMode(mode);
-  //   prev_mode=mode;
-  // }
+  //sensora = constrain(sensora,minValueSensorA,maxValueSensorA);
+  //sensorb = constrain(sensorb,minValueSensorB,maxValueSensorB);
+
+  if (mode != prev_mode){
+     sendMode(mode);
+     prev_mode=mode;
+   }
 
   if (level != prev_level){
     sendLevel(level);

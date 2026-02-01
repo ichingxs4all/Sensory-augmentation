@@ -189,6 +189,7 @@ void setFilterSensorB(OSCMessage &msg) {
 }
 void mode_set(OSCMessage &msg) {
   mode = msg.getInt(0);
+  setMODUS(mode);
   sendMode(mode);
   if(debug){
   Serial.print("/mode: ");

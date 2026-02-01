@@ -9,8 +9,39 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 305.0, 236.0, 600.0, 518.0 ],
+        "rect": [ 573.0, 255.0, 600.0, 518.0 ],
         "boxes": [
+            {
+                "box": {
+                    "id": "obj-7",
+                    "maxclass": "toggle",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "int" ],
+                    "parameter_enable": 0,
+                    "patching_rect": [ 253.0, 309.0, 24.0, 24.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-2",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 253.0, 371.0, 57.0, 22.0 ],
+                    "text": "s polarity"
+                }
+            },
+            {
+                "box": {
+                    "id": "obj-1",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 176.0, 371.0, 45.0, 22.0 ],
+                    "text": "s r_led"
+                }
+            },
             {
                 "box": {
                     "id": "obj-20",
@@ -108,7 +139,15 @@
             },
             {
                 "patchline": {
+                    "destination": [ "obj-1", 0 ],
+                    "order": 0,
+                    "source": [ "obj-12", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "obj-9", 0 ],
+                    "order": 1,
                     "source": [ "obj-12", 0 ]
                 }
             },
@@ -134,6 +173,12 @@
                 "patchline": {
                     "destination": [ "obj-8", 0 ],
                     "source": [ "obj-6", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "obj-2", 0 ],
+                    "source": [ "obj-7", 0 ]
                 }
             }
         ],
