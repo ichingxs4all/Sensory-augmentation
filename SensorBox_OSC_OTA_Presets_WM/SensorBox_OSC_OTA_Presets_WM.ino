@@ -27,8 +27,8 @@ char pass[] = "m4k3s3ns!";    // your network password
 WiFiUDP Udp;
 
 const IPAddress outIp(192, 168, 50, 255);  // remote IP 
-const unsigned int outPort = 9999;      // remote port 
-const unsigned int localPort = 8888;    // local port to listen for UDP packets (here's where we send the packets)
+const unsigned int outPort = 9998;      // remote port 
+const unsigned int localPort = 8889;    // local port to listen for UDP packets (here's where we send the packets)
 
 OSCErrorCode error;
 
