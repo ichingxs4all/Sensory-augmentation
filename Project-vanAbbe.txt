@@ -1,0 +1,7 @@
+rgbw kabel
+Neopixel led 5mm
+Breakout
+multi polige connector
+Vlam sensor minimaliseren
+programma schakelaar hertzien
+
